@@ -11,6 +11,7 @@ namespace Homicide.Game
 		RefreshRate,
 		FullscreenMode,
 		Volume,
+		Inverted,
 	}
 
 	public class SettingsManager : Singleton<SettingsManager>
@@ -18,6 +19,8 @@ namespace Homicide.Game
 		public static InputActions InputActions { get; private set; }
 
 		public static event Action OnKeybindChanged;
+		
+		public static bool Inverted { get; private set; }
 
 		protected override void Awake()
 		{
@@ -26,7 +29,7 @@ namespace Homicide.Game
 			FetchStoredSettings();
 		}
 
-		private void FetchStoredSettings()
+		private static void FetchStoredSettings()
 		{
 			SetupScreen();
 			LoadKeybinds();
@@ -35,17 +38,17 @@ namespace Homicide.Game
 			PlayerPrefs.Save();
 		}
 
-		private void LoadAudioSettings()
+		private static void LoadAudioSettings()
 		{
 			AudioListener.volume = GetFloat(SettingKey.Volume, 1f);
 		}
 
-		private void LoadGameplaySettings()
+		private static void LoadGameplaySettings()
 		{
-			
+			Inverted = GetBool(SettingKey.Inverted, false);
 		}
 
-		private void SetupScreen()
+		private static void SetupScreen()
 		{
 			var width = GetInt(SettingKey.Width, Screen.currentResolution.width);
 			var height = GetInt(SettingKey.Height, Screen.currentResolution.height);
@@ -61,7 +64,7 @@ namespace Homicide.Game
 			Screen.SetResolution(width, height, mode, hz);
 		}
 
-		private void LoadKeybinds()
+		private static void LoadKeybinds()
 		{
 			foreach (var action in InputActions)
 			{
