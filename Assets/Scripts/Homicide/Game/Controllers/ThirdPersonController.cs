@@ -68,72 +68,72 @@ namespace Homicide.Game.Controllers
         [SerializeField] private float aimOffset;
         
         [TabGroup("Camera")]
-        [SerializeField] private LayerMask aimMask = new LayerMask();
+        [SerializeField] private LayerMask aimMask = new();
 
         // Cinemachine
-        private float _cinemachineTargetYaw;
-        private float _cinemachineTargetPitch;
+        private float cinemachineTargetYaw;
+        private float cinemachineTargetPitch;
 
         // Player
-        private float _speed;
-        private float _animationBlend;
-        private float _targetRotation = 0.0f;
-        private float _rotationVelocity;
-        private float _verticalVelocity;
+        private float speed;
+        private float animationBlend;
+        private float targetRotation = 0.0f;
+        private float rotationVelocity;
+        private float verticalVelocity;
 
         // Animation IDs
-        private readonly int _animIDSpeed = Animator.StringToHash("Speed");
-        private readonly int _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+        private readonly int animIDSpeed = Animator.StringToHash("Speed");
+        private readonly int animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
 
         // References
-        private PlayerInput _playerInput;
-        private CharacterController _controller;
-        private Animator _animator;
-        private Camera _camera;
+        private PlayerInput playerInput;
+        private CharacterController controller;
+        private Animator animator;
+        private new Camera camera;
         
         // Input
-        private Vector2 _look;
-        private Vector2 _movement;
-        private bool _sprinting;
-        private bool _aiming;
+        private Vector2 look;
+        private Vector2 movement;
+        private bool sprinting;
+        private bool aiming;
         
         private const float Threshold = 0.01f;
         
-        private InputActions.PlayerActions _actions;
+        private InputActions.PlayerActions actions;
 
         protected void Awake()
         {
-            _actions = new InputActions.PlayerActions(SettingsManager.InputActions);
-            _actions.SetCallbacks(this);
+            actions = new(SettingsManager.InputActions);
+            actions.SetCallbacks(this);
             
-            _controller = GetComponent<CharacterController>();
-            _animator = GetComponent<Animator>();
-            _camera = Camera.main;
+            controller = GetComponent<CharacterController>();
+            animator = GetComponent<Animator>();
+            camera = Camera.main;
             
             SetPlayerControl(hasControl);
         }
 
         private void OnEnable()
         {
-            _actions.Enable();
+            actions.Enable();
         }
 
         private void OnDisable()
         {
-            _actions.Disable();
+            actions.Disable();
         }
 
         public void GameUpdate()
         {
             if (!hasControl)
             {
-                _movement = Vector2.zero;
-                _sprinting = false;
-                _aiming = false;
+                movement = Vector2.zero;
+                sprinting = false;
+                aiming = false;
             }
 
             Move();
-            if (_aiming) Aiming();
+            if (aiming) Aiming();
         }
 
         public void GameLateUpdate()
@@ -153,33 +153,33 @@ namespace Homicide.Game.Controllers
         
         private Vector3 GetAimPoint()
         {
-            var ray = _camera.ScreenPointToRay(new Vector2(Screen.width / 2f, Screen.height / 2f));
+            var ray = camera.ScreenPointToRay(new Vector2(Screen.width / 2f, Screen.height / 2f));
             return Physics.Raycast(ray, out var hit, 1000f, aimMask) ? hit.point : ray.GetPoint(1000f);
         }
 
         private void CameraRotation()
         {
-            if (_look.sqrMagnitude >= Threshold && !lockCameraPosition)
+            if (look.sqrMagnitude >= Threshold && !lockCameraPosition)
             {
-                _look *= sensitivity;
-                _cinemachineTargetYaw += _look.x;
-                _cinemachineTargetPitch += SettingsManager.Inverted ? _look.y : -_look.y;
+                look *= sensitivity;
+                cinemachineTargetYaw += look.x;
+                cinemachineTargetPitch += SettingsManager.Inverted ? look.y : -look.y;
             }
 
-            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
-            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, bottomClamp, topClamp);
+            cinemachineTargetYaw = ClampAngle(cinemachineTargetYaw, float.MinValue, float.MaxValue);
+            cinemachineTargetPitch = ClampAngle(cinemachineTargetPitch, bottomClamp, topClamp);
 
-            cinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + cameraAngleOverride,
-                _cinemachineTargetYaw, 0.0f);
+            cinemachineCameraTarget.transform.rotation = Quaternion.Euler(cinemachineTargetPitch + cameraAngleOverride,
+                cinemachineTargetYaw, 0.0f);
         }
 
         private void Move()
         {
-            var targetSpeed = _sprinting ? sprintSpeed : moveSpeed;
+            var targetSpeed = sprinting ? sprintSpeed : moveSpeed;
             
-            if (_movement == Vector2.zero) targetSpeed = 0.0f;
+            if (movement == Vector2.zero) targetSpeed = 0.0f;
 
-            var velocity = _controller.velocity;
+            var velocity = controller.velocity;
             var currentHorizontalSpeed = new Vector3(velocity.x, 0.0f, velocity.z).magnitude;
             
             const float speedOffset = 0.1f;
@@ -187,37 +187,37 @@ namespace Homicide.Game.Controllers
             if (currentHorizontalSpeed < targetSpeed - speedOffset ||
                 currentHorizontalSpeed > targetSpeed + speedOffset)
             {
-                _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed,Time.deltaTime * speedChangeRate);
-                _speed = Mathf.Round(_speed * 1000f) / 1000f;
+                speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed,Time.deltaTime * speedChangeRate);
+                speed = Mathf.Round(speed * 1000f) / 1000f;
             }
             else
             {
-                _speed = targetSpeed;
+                speed = targetSpeed;
             }
 
-            _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * speedChangeRate);
-            if (_animationBlend < 0.01f) _animationBlend = 0f;
+            animationBlend = Mathf.Lerp(animationBlend, targetSpeed, Time.deltaTime * speedChangeRate);
+            if (animationBlend < 0.01f) animationBlend = 0f;
 
-            var inputDirection = new Vector3(_movement.x, 0.0f, _movement.y).normalized;
+            var inputDirection = new Vector3(movement.x, 0.0f, movement.y).normalized;
 
-            if (_movement != Vector2.zero)
+            if (movement != Vector2.zero)
             {
-                _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
-                                  _camera.transform.eulerAngles.y;
-                var rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
+                targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
+                                  camera.transform.eulerAngles.y;
+                var rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref rotationVelocity,
                     rotationSmoothTime);
 
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
             }
 
 
-            var targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
+            var targetDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
 
-            _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
-                             new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+            controller.Move(targetDirection.normalized * (speed * Time.deltaTime) +
+                             new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);
 
-            _animator.SetFloat(_animIDSpeed, _animationBlend);
-            _animator.SetFloat(_animIDMotionSpeed, 1);
+            animator.SetFloat(animIDSpeed, animationBlend);
+            animator.SetFloat(animIDMotionSpeed, 1);
         }
 
         private void OnFootstep(AnimationEvent animationEvent)
@@ -225,32 +225,32 @@ namespace Homicide.Game.Controllers
             if (!(animationEvent.animatorClipInfo.weight > 0.5f)) return;
             
             var index = Random.Range(0, footstepAudioClips.Length);
-            AudioSource.PlayClipAtPoint(footstepAudioClips[index], transform.TransformPoint(_controller.center), footstepAudioVolume);
+            AudioSource.PlayClipAtPoint(footstepAudioClips[index], transform.TransformPoint(controller.center), footstepAudioVolume);
         }
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            _movement = context.ReadValue<Vector2>();
+            movement = context.ReadValue<Vector2>();
         }
 
         public void OnSprint(InputAction.CallbackContext context)
         {
-            _sprinting = context.performed;
+            sprinting = context.performed;
         }
 
         public void OnLook(InputAction.CallbackContext context)
         {
-            _look = context.ReadValue<Vector2>();
+            look = context.ReadValue<Vector2>();
         }
 
         public void OnAim(InputAction.CallbackContext context)
         {
             if (context.performed)
-                _aiming = true;
+                aiming = true;
             else if (context.canceled)
-                _aiming = false;
+                aiming = false;
             
-            aimCamera.gameObject.SetActive(_aiming);
+            aimCamera.gameObject.SetActive(aiming);
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
