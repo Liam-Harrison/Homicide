@@ -5,7 +5,7 @@ namespace Homicide.Game
 {
     public abstract class GameBehaviour : MonoBehaviour
     {
-        protected void Start()
+        protected virtual void Start()
         {
 #if UNITY_EDITOR
             if (GetType().HasMethod("Update"))
@@ -16,6 +16,12 @@ namespace Homicide.Game
 #endif
             
             GameManager.Instance.Track(this);
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (GameManager.Instance != null)
+                GameManager.Instance.Untrack(this);
         }
     }
 }
