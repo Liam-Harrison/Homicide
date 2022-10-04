@@ -49,19 +49,19 @@ namespace Homicide
 
             if (scene.HasFlag(Scene.GameMain))
             {
-                SceneManager.LoadSceneAsync(Constants.GAME_MAIN_SCENE_PATH, mode);
+                SceneManager.LoadSceneAsync(Constants.GameMainScenePath, mode);
                 loaded = true;
             }
 
             if (scene.HasFlag(Scene.Persistent))
             {
-                SceneManager.LoadSceneAsync(Constants.PERSISTENT_SCENE_PATH, loaded ? LoadSceneMode.Additive : mode);
+                SceneManager.LoadSceneAsync(Constants.PersistentScenePath, loaded ? LoadSceneMode.Additive : mode);
                 loaded = true;
             }
 
             if (scene.HasFlag(Scene.MainMenu))
             {
-                SceneManager.LoadSceneAsync(Constants.MAINMENU_SCENE_PATH, loaded ? LoadSceneMode.Additive : mode);
+                SceneManager.LoadSceneAsync(Constants.MainmenuScenePath, loaded ? LoadSceneMode.Additive : mode);
             }
         }
     }

@@ -16,53 +16,53 @@ namespace Homicide.Game
     
     public class GameManager : Singleton<GameManager>
     {
-        private readonly HashSet<GameBehaviour> _behaviours = new HashSet<GameBehaviour>();
-        private readonly HashSet<IUpdate> _updates = new HashSet<IUpdate>();
-        private readonly HashSet<ILateUpdate> _lateUpdates = new HashSet<ILateUpdate>();
+        private readonly HashSet<GameBehaviour> behaviours = new();
+        private readonly HashSet<IUpdate> updates = new();
+        private readonly HashSet<ILateUpdate> lateUpdates = new();
         
         private void Update()
         {
-            foreach (var i in _updates)
+            foreach (var i in updates)
                 i.GameUpdate();
         }
 
         private void LateUpdate()
         {
-            foreach (var i in _lateUpdates)
+            foreach (var i in lateUpdates)
                 i.GameLateUpdate();
         }
 
         public void Track(GameBehaviour behaviour)
         {
-            if (_behaviours.Contains(behaviour))
+            if (behaviours.Contains(behaviour))
                 return;
             
-            _behaviours.Add(behaviour);
+            behaviours.Add(behaviour);
             
             if (behaviour is IUpdate update)
-                _updates.Add(update);
+                updates.Add(update);
             
             if (behaviour is ILateUpdate late)
-                _lateUpdates.Add(late);
+                lateUpdates.Add(late);
         }
 
         public void Untrack(GameBehaviour behaviour)
         {
-            if (!_behaviours.Contains(behaviour))
+            if (!behaviours.Contains(behaviour))
                 return;
             
             if (behaviour is IUpdate update)
-                _updates.Remove(update);
+                updates.Remove(update);
             
             if (behaviour is ILateUpdate late)
-                _lateUpdates.Remove(late);
+                lateUpdates.Remove(late);
             
-            _behaviours.Remove(behaviour);
+            behaviours.Remove(behaviour);
         }
         
         public void UnloadBehaviours()
         {
-            foreach (var behaviour in _behaviours)
+            foreach (var behaviour in behaviours)
             {
                 Destroy(behaviour.gameObject);
             }

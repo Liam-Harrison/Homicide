@@ -10,7 +10,7 @@ namespace Homicide.Game
 
     public static class Referencable
     {
-        private static readonly Dictionary<uint, IReferencable> Referencables = new Dictionary<uint, IReferencable>();
+        private static readonly Dictionary<uint, IReferencable> Referencables = new();
 
         private static uint nextId;
 
