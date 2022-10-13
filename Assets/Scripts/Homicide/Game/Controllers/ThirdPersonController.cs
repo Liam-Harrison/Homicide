@@ -26,6 +26,10 @@ namespace Homicide.Game.Controllers
         [TabGroup("Locomotion")]
         [Tooltip("Acceleration and deceleration")]
         public float speedChangeRate = 10.0f;
+        
+        [TabGroup("Locomotion")]
+        [Tooltip("Acceleration and deceleration")]
+        public float gravity = 10.0f;
 
         [TabGroup("Locomotion")]
         public AudioClip[] footstepAudioClips;
@@ -132,8 +136,14 @@ namespace Homicide.Game.Controllers
                 aiming = false;
             }
 
+            Gravity();
             Move();
             if (aiming) Aiming();
+        }
+
+        private void Gravity()
+        {
+            _controller.Move(Vector3.down * (gravity * Time.smoothDeltaTime));
         }
 
         public void GameLateUpdate()
