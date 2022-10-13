@@ -83,7 +83,7 @@ namespace Homicide.Game.Controllers
         private float animationBlend;
         private float targetRotation = 0.0f;
         private float rotationVelocity;
-        private float verticalVelocity;
+        private float verticalVelocity = -6f;
 
         // Animation IDs
         private readonly int animIDSpeed = Animator.StringToHash("Speed");
@@ -136,14 +136,8 @@ namespace Homicide.Game.Controllers
                 aiming = false;
             }
 
-            Gravity();
             Move();
             if (aiming) Aiming();
-        }
-
-        private void Gravity()
-        {
-            _controller.Move(Vector3.down * (gravity * Time.smoothDeltaTime));
         }
 
         public void GameLateUpdate()
@@ -182,7 +176,7 @@ namespace Homicide.Game.Controllers
             cinemachineCameraTarget.transform.rotation = Quaternion.Euler(cinemachineTargetPitch + cameraAngleOverride,
                 cinemachineTargetYaw, 0.0f);
         }
-
+        
         private void Move()
         {
             var targetSpeed = sprinting ? sprintSpeed : moveSpeed;
