@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace Homicide.AI.Tasks
 {
@@ -24,6 +22,9 @@ namespace Homicide.AI.Tasks
 
         public void CleanupInactiveWorkers()
         {
+            if (assigned == null)
+                return;
+
             if (!assigned.Agent.Active || assigned.Agent.Dead)
                 assigned = null;
         }

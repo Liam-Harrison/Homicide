@@ -83,8 +83,7 @@ namespace Homicide.AI.Tasks.Acts
 				new Do(StartPath),
 				new Wrap(CheckPath),
 				new Wrap(CheckStopped),
-				new StopAct(AgentAI),
-				new Wait(3)
+				new StopAct(AgentAI)
 			);
 
 			base.Initialize();

@@ -87,6 +87,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b8244bb39ef7254181f04cd25cea59d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ragdoll: {fileID: 3814856465402650062, guid: e47518b0eab7f914ebd58acb830690d5, type: 3}
+  brief:
+    message: Kill
+    icon: {fileID: 21300000, guid: c50ecf4cb0747f64487b52e59758d9a7, type: 3}
   debug: 0
   footstepAudioClips:
   - {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
