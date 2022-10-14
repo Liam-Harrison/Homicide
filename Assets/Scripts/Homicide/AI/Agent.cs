@@ -1,12 +1,19 @@
 using Homicide.AI.FSM;
 using Homicide.AI.Tasks;
 using Homicide.Game;
+using UnityEditor.Hardware;
 using UnityEngine;
 
 namespace Homicide.AI
 {
-	public class Agent : Entity, IReferencable, IUpdate
+	public class Agent : Entity, IReferencable, IUpdate, IInteractable
 	{
+		[SerializeField]
+		private GameObject ragdoll;
+
+		[SerializeField]
+		private InteractionBrief brief;
+
 		[SerializeField]
 		private bool debug;
 
@@ -23,6 +30,8 @@ namespace Homicide.AI
 		public bool Active { get; set; }
 
 		public bool Dead { get; set; }
+
+		public InteractionBrief GetInteractionBrief => brief;
 
 		protected override void Start()
 		{
@@ -98,6 +107,23 @@ namespace Homicide.AI
 		{
 			GUI.Label(new(16, 16 + y, 300, 22), line);
 			y += 22;
+		}
+
+		public void OnInteracted(GameBehaviour source)
+		{
+			if (IsDead)
+				return;
+
+			IsDead = true;
+			GenerateRagdoll();
+			Destroy(gameObject);
+		}
+
+		public void GenerateRagdoll()
+		{
+			var go = Instantiate(ragdoll);
+			TransformExtensions.CopyTransformChildren(transform, go.transform);
+			go.gameObject.SetActive(true);
 		}
 	}
 }

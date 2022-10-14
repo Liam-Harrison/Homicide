@@ -52,5 +52,15 @@ namespace Homicide
 		Object.Destroy(obj);
 #endif
 		}
+
+		public static void CopyTransformChildren(Transform parent, Transform target)
+		{
+			target.CopyTransform(parent);
+
+			for (int i = 0; i < parent.childCount; i++)
+			{
+				CopyTransformChildren(parent.GetChild(i), target.GetChild(i));
+			}
+		}
 	}
 }

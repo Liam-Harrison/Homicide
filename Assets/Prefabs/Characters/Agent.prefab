@@ -65,7 +65,7 @@ PrefabInstance:
     - target: {fileID: 6856143620377423841, guid: 88c6a5251c97b9148b4f2bb9690ce6f2,
         type: 3}
       propertyPath: m_Name
-      value: Character Base
+      value: Agent
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88c6a5251c97b9148b4f2bb9690ce6f2, type: 3}
@@ -75,6 +75,29 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 377638621382152373}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1393442028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6492024759337598804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b8244bb39ef7254181f04cd25cea59d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ragdoll: {fileID: 3814856465402650062, guid: e47518b0eab7f914ebd58acb830690d5, type: 3}
+  brief:
+    message: Kill
+    icon: {fileID: 21300000, guid: c50ecf4cb0747f64487b52e59758d9a7, type: 3}
+  debug: 0
+  footstepAudioClips:
+  - {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  - {fileID: 8300000, guid: 85016e0f2b01da248b9663dd49a161b0, type: 3}
+  - {fileID: 8300000, guid: 186de84b3207156479abe98f4958fed0, type: 3}
+  - {fileID: 8300000, guid: 1a91fcd19acf1e54bba0945d9f390849, type: 3}
+  footstepAudioVolume: 0.5
 --- !u!114 &1393442029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,16 +126,3 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
---- !u!114 &1393442028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6492024759337598804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b8244bb39ef7254181f04cd25cea59d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debug: 0

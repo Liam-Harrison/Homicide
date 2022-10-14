@@ -83,7 +83,7 @@ namespace Homicide.Game.Controllers
         private float animationBlend;
         private float targetRotation = 0.0f;
         private float rotationVelocity;
-        private float verticalVelocity;
+        private float verticalVelocity = -6f;
 
         // Animation IDs
         private readonly int animIDSpeed = Animator.StringToHash("Speed");
@@ -102,6 +102,10 @@ namespace Homicide.Game.Controllers
         private bool aiming;
         
         private const float Threshold = 0.01f;
+
+        public static IInteractable Interactable { get; private set; }
+
+        public static event Action<IInteractable> OnChangedInteractable;
         
         private InputActions.PlayerActions actions;
 
@@ -136,22 +140,31 @@ namespace Homicide.Game.Controllers
                 aiming = false;
             }
 
-            Gravity();
             Move();
             if (aiming) Aiming();
-        }
-
-        private void Gravity()
-        {
-            _controller.Move(Vector3.down * (gravity * Time.smoothDeltaTime));
         }
 
         public void GameLateUpdate()
         {
             CameraRotation();
+            CheckInteractable();
         }
 
-        private void Aiming()
+		private void CheckInteractable()
+		{
+			var ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+			if (Physics.Raycast(ray, out var hit, 5f))
+			{
+				var i = hit.collider.GetComponent<IInteractable>();
+
+                if (Interactable != i)
+                    OnChangedInteractable?.Invoke(i);
+
+				Interactable = i;
+			}
+		}
+
+		private void Aiming()
         {
             var point = GetAimPoint();
             aimTarget.position = point;
@@ -182,7 +195,7 @@ namespace Homicide.Game.Controllers
             cinemachineCameraTarget.transform.rotation = Quaternion.Euler(cinemachineTargetPitch + cameraAngleOverride,
                 cinemachineTargetYaw, 0.0f);
         }
-
+        
         private void Move()
         {
             var targetSpeed = sprinting ? sprintSpeed : moveSpeed;
@@ -275,5 +288,13 @@ namespace Homicide.Game.Controllers
             hasControl = state;
             Cursor.lockState = hasControl ? CursorLockMode.Locked : CursorLockMode.Confined;
         }
-    }
+
+		public void OnInteract(InputAction.CallbackContext context)
+		{
+			if (Interactable != null && context.performed)
+			{
+				Interactable.OnInteracted(this);
+			}
+		}
+	}
 }
