@@ -1,0 +1,44 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 13.02.2019 17:05:23
+
+newmtl Baker_Emerald_Mirror_mtl_1
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.0000 0.0000 0.0000
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Baker_Emerald_Mirror_mtl_2
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.4431 0.3843 0.2902
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka dcmap_Baker_Emerald Mirror_diff.jpg
+	map_Kd dcmap_Baker_Emerald Mirror_diff.jpg
+	map_bump dcmap_Baker_Emerald Mirror_bump.jpg
+	bump dcmap_Baker_Emerald Mirror_bump.jpg
+
+newmtl Baker_Emerald_Mirror_mtl_3
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.0392 0.0392 0.0392
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_bump dcmap_Baker_Emerald Mirror_bump(1).jpg
+	bump dcmap_Baker_Emerald Mirror_bump(1).jpg
