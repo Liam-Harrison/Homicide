@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +10,8 @@ namespace Homicide.Game.Controllers
     [RequireComponent(typeof(CharacterController))]
     public class ThirdPersonController : GameBehaviour, InputActions.IPlayerActions, IUpdate, ILateUpdate
     {
+        public static ThirdPersonController Instance { get; private set; }
+        
         [TabGroup("Locomotion")]
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -74,6 +77,13 @@ namespace Homicide.Game.Controllers
         [TabGroup("Camera")]
         [SerializeField] private LayerMask aimMask = new();
 
+        [TabGroup("Weapons"), SerializeField] private Transform parent;
+        [TabGroup("Weapons"), SerializeField] private SceneLoader loader;
+        
+        [TabGroup("Weapons"), PropertySpace, SerializeField] private GameObject knife;
+        
+        public Weapon Equipped { get; private set; }
+        
         // Cinemachine
         private float cinemachineTargetYaw;
         private float cinemachineTargetPitch;
@@ -111,6 +121,8 @@ namespace Homicide.Game.Controllers
 
         protected void Awake()
         {
+            Instance = this;
+            
             actions = new(SettingsManager.InputActions);
             actions.SetCallbacks(this);
             
@@ -119,6 +131,12 @@ namespace Homicide.Game.Controllers
             camera = Camera.main;
             
             SetPlayerControl(hasControl);
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            ScheduleScan();
         }
 
         private void OnEnable()
@@ -152,8 +170,9 @@ namespace Homicide.Game.Controllers
 
 		private void CheckInteractable()
 		{
-			var ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-			if (Physics.Raycast(ray, out var hit, 5f))
+			var or = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+            var ray = new Ray(or.GetPoint(1.5f), or.direction);
+			if (Physics.SphereCast(ray, 0.2f, out var hit, 3f, LayerMask.GetMask("Interactable")))
 			{
 				var i = hit.collider.GetComponent<IInteractable>();
 
@@ -162,6 +181,13 @@ namespace Homicide.Game.Controllers
 
 				Interactable = i;
 			}
+            else
+            {
+                if (Interactable != null)
+                    OnChangedInteractable?.Invoke(null);
+                
+                Interactable = null;
+            }
 		}
 
 		private void Aiming()
@@ -296,5 +322,43 @@ namespace Homicide.Game.Controllers
 				Interactable.OnInteracted(this);
 			}
 		}
+
+        public void OnRestart(InputAction.CallbackContext context)
+        {
+            loader.LoadScene();
+        }
+
+        private GameObject held;
+
+        public void Equip(Weapon weapon)
+        {
+            if (held != null)
+                Destroy(held);
+
+            if (weapon == Weapon.Knife)
+                held = Instantiate(knife, parent);
+
+            Equipped = weapon;
+        }
+        private void ScheduleScan()
+        {
+            if (running != null)
+                StopCoroutine(running);
+            
+            running = StartCoroutine(Scan());
+        }
+
+        private const float ScanWaitTime = 0.5f;
+        private Coroutine running;
+        
+        private IEnumerator Scan()
+        {
+            var started = Time.time;
+            
+            while (Time.time < started + ScanWaitTime)
+                yield return null;
+            
+            FindObjectOfType<AstarPath>().Scan();
+        }
 	}
 }

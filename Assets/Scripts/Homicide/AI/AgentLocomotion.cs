@@ -13,6 +13,9 @@ namespace Homicide.AI
 		private readonly Queue<Vector3> nodes = new();
 
 		private const float MaxSpeed = 3.5f;
+		private const float WalkSpeed = 2.25f;
+		
+		public bool Running { get; set; }
 
 		public Vector3? TargetNode { get; private set; }
 
@@ -70,10 +73,10 @@ namespace Homicide.AI
 
 			if (TargetNode != null)
 			{
-				targetVel = MaxSpeed;
+				targetVel = Running ? MaxSpeed : WalkSpeed;
 
 				var d = (TargetNode.Value - Agent.transform.position).normalized;
-				controller.Move(d * (velcoity * Time.smoothDeltaTime));
+				controller.Move(d * (velcoity * Time.smoothDeltaTime) + new Vector3(0.0f, -6f, 0.0f) * Time.deltaTime);
 
 				var fwd = d.RemoveAxes(y: true);
 

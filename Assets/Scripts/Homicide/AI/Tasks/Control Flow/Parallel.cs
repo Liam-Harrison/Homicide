@@ -16,12 +16,12 @@ namespace Homicide.AI.Tasks.Control_Flow
 			ReturnOnAllSuccess = true;
 		}
 
-		public Parallel(IEnumerable<Act> children)
+		public Parallel(IEnumerable<Act> children, bool returnOnAllSuccess = true)
 		{
 			name = "Parallel";
 			Children = new();
 			Children.AddRange(children);
-			ReturnOnAllSuccess = true;
+			ReturnOnAllSuccess = returnOnAllSuccess;
 		}
 
 		public override void Initialize()

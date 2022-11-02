@@ -12,7 +12,7 @@ namespace Homicide.AI.Tasks
         public string name;
         public bool wasCancelled = false;
 
-        public FailureRecord failureRecord = new();
+        public readonly FailureRecord failureRecord = new();
 
         [JsonIgnore] public object guiTag = null;
 

@@ -10,7 +10,7 @@ namespace Homicide.AI.Tasks
 	{
 		[JsonProperty] private List<Job> jobs = new();
 
-		public int JobCount { get => jobs.Count; }
+		public int JobCount => jobs.Count;
 
 		public IEnumerable<Job> EnumerateTasks()
 		{
@@ -388,7 +388,7 @@ namespace Homicide.AI.Tasks
 
 			return goalMatrix.FindAssignments();
 		}
-
+		
 		private class CostComparer : IComparer<KeyValuePair<int, float>>
 		{
 			public int Compare(KeyValuePair<int, float> pairA, KeyValuePair<int, float> pairB)

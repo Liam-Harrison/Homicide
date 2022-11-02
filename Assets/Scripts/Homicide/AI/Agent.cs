@@ -1,7 +1,7 @@
 using Homicide.AI.FSM;
 using Homicide.AI.Tasks;
 using Homicide.Game;
-using UnityEditor.Hardware;
+using Homicide.Game.Controllers;
 using UnityEngine;
 
 namespace Homicide.AI
@@ -31,11 +31,24 @@ namespace Homicide.AI
 
 		public bool Dead { get; set; }
 
-		public InteractionBrief GetInteractionBrief => brief;
+		public InteractionBrief GetInteractionBrief
+		{
+			get
+			{
+				if (ThirdPersonController.Instance.Equipped == Weapon.Knife)
+					return new InteractionBrief { icon = brief.icon, message = "Stab" };
+				else
+					return new InteractionBrief{ icon = null };
+			}
+		}
+		
+		public Animator Animator { get; private set; }
 
 		protected override void Start()
 		{
 			base.Start();
+
+			Animator = GetComponent<Animator>();
 
 			FSM = new(this);
 			AgentLocomotion = new(this);
@@ -105,7 +118,7 @@ namespace Homicide.AI
 
 		private static void Print(string line, ref int y)
 		{
-			GUI.Label(new(16, 16 + y, 300, 22), line);
+			GUI.Label(new Rect(16, 16 + y, 300, 22), line);
 			y += 22;
 		}
 
@@ -114,12 +127,15 @@ namespace Homicide.AI
 			if (IsDead)
 				return;
 
+			if (ThirdPersonController.Instance.Equipped == Weapon.None)
+				return;
+
 			IsDead = true;
 			GenerateRagdoll();
 			Destroy(gameObject);
 		}
-
-		public void GenerateRagdoll()
+		
+		private void GenerateRagdoll()
 		{
 			var go = Instantiate(ragdoll);
 			TransformExtensions.CopyTransformChildren(transform, go.transform);

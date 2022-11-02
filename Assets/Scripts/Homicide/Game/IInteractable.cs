@@ -1,19 +1,18 @@
-using Homicide.Game;
 using System;
 using UnityEngine;
 
-[Serializable]
-public class InteractionBrief
+namespace Homicide.Game
 {
-	[SerializeField] private string message;
-	[SerializeField] private Sprite icon;
+	[Serializable]
+	public class InteractionBrief
+	{
+		public string message;
+		public Sprite icon;
+	}
 
-	public string Message => message;
-	public Sprite Icon => icon;
-}
-
-public interface IInteractable
-{
-	public void OnInteracted(GameBehaviour source);
-	public InteractionBrief GetInteractionBrief { get; }
+	public interface IInteractable
+	{
+		public void OnInteracted(GameBehaviour source);
+		public InteractionBrief GetInteractionBrief { get; }
+	}
 }

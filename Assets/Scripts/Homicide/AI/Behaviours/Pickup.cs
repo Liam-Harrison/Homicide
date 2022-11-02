@@ -1,30 +1,39 @@
-using Homicide.AI;
 using Homicide.AI.Tasks;
 using Homicide.AI.Tasks.Jobs;
 using Homicide.Game;
+using Homicide.Game.Controllers;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class Pickup : Entity, IInteractable
+namespace Homicide.AI.Behaviours
 {
-	[TabGroup("Pickup"), SerializeField]
-	private InteractionBrief brief;
-
-	[SerializeField, TabGroup("Pickup")]
-	private bool canAiPickup;
-
-	public InteractionBrief GetInteractionBrief => brief;
-
-	protected override void Start()
+	public class Pickup : Entity, IInteractable
 	{
-		base.Start();
+		[TabGroup("Pickup"), SerializeField]
+		private InteractionBrief brief;
 
-		if (canAiPickup)
-			TaskManager.Instance.AddJob(new GrabJob(this));
-	}
+		[SerializeField, TabGroup("Pickup")]
+		private bool canAiPickup;
+		
+		[SerializeField, TabGroup("Pickup")]
+		private Weapon weapon;
 
-	public void OnInteracted(GameBehaviour source)
-	{
-		Destroy(gameObject);
+		public InteractionBrief GetInteractionBrief => brief;
+
+		protected override void Start()
+		{
+			base.Start();
+
+			if (canAiPickup)
+				TaskManager.Instance.AddJob(new GrabJob(this));
+		}
+
+		public void OnInteracted(GameBehaviour source)
+		{
+			Destroy(gameObject);
+			
+			if (source is ThirdPersonController player)
+				player.Equip(weapon);
+		}
 	}
 }

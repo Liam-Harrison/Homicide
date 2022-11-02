@@ -17,6 +17,8 @@ namespace Homicide.AI.Tasks.Acts
 
 		public bool traveling;
 
+		public float maxTime;
+
 		public Goto() { }
 
 		public Goto(Vector3 pos, AgentAI agent) : base(agent)
@@ -25,6 +27,7 @@ namespace Homicide.AI.Tasks.Acts
 			failed = false;
 			traveling = false;
 			computing = true;
+			maxTime = Vector3.Distance(Agent.transform.position, pos) * 2.5f;
 		}
 
 		public Goto(string blackboard, AgentAI agent) : base(agent)
@@ -77,13 +80,19 @@ namespace Homicide.AI.Tasks.Acts
 			return true;
 		}
 
+		private bool CheckSuccess()
+		{
+			return Vector3.Distance(Agent.transform.position, position) < 1f;
+		}
+
 		public override void Initialize()
 		{
 			Tree = new Sequence(
 				new Do(StartPath),
 				new Wrap(CheckPath),
-				new Wrap(CheckStopped),
-				new StopAct(AgentAI)
+				new Parallel(new Act[]{new Wrap(CheckStopped), new Wait(maxTime)}),
+				new StopAct(AgentAI),
+				new Do(CheckSuccess)
 			);
 
 			base.Initialize();

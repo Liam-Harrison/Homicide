@@ -42,4 +42,10 @@ namespace Homicide
 		/// </summary>
 		public static readonly string MainmenuScenePath = "Assets/Scenes/MainMenu.unity";
 	}
+
+	public enum Weapon
+	{
+		None,
+		Knife,
+	}
 }

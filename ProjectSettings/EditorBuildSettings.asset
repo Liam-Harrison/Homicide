@@ -9,9 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Persistent.unity
     guid: b1f15933b41d6e543b7024ff48a2ce1f
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
-    guid: 96a153aa1aa71ed4692de56211c7f043
-  - enabled: 1
     path: Assets/Scenes/GameMain.unity
     guid: ce784125035a98e4f84e260286776bf9
   m_configObjects:

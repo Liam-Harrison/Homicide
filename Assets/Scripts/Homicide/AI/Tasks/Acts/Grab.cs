@@ -22,7 +22,7 @@ namespace Homicide.AI.Tasks.Acts
 		public override void Initialize()
 		{
 			Tree = new Sequence(
-				new Goto(entity.transform.position, AgentAI),
+	new Goto(entity.transform.position, AgentAI),
 				new Do(GrabAction)
 			);
 

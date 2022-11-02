@@ -35,10 +35,12 @@ namespace Homicide.UI
 				return;
 			}
 
-			interactiveImage.sprite = interactable.GetInteractionBrief.Icon;
-			interactiveLabel.text = interactable.GetInteractionBrief.Message;
+			var brief = interactable.GetInteractionBrief;
 
-			interactiveImage.gameObject.SetActive(true);
+			interactiveImage.sprite = brief.icon;
+			interactiveLabel.text = brief.message;
+
+			interactiveImage.gameObject.SetActive(brief.icon != null);
 			interactiveLabel.gameObject.SetActive(true);
 		}
 	}
