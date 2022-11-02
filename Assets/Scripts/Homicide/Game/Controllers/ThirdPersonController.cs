@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Homicide.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -81,6 +82,19 @@ namespace Homicide.Game.Controllers
         [TabGroup("Weapons"), SerializeField] private SceneLoader loader;
         
         [TabGroup("Weapons"), PropertySpace, SerializeField] private GameObject knife;
+
+        [TabGroup("Dialogue"), SerializeField]
+        private Transform follow;
+        
+        [TabGroup("Dialogue"), SerializeField]
+        private string[] dialogue;
+        
+        [TabGroup("Dialogue"), SerializeField, MinMaxSlider(10, 60)]
+        private Vector2Int dialogueRange;
+
+        private float nextDialogue = 10;
+
+        public Transform Follow => follow;
         
         public Weapon Equipped { get; private set; }
         
@@ -160,12 +174,22 @@ namespace Homicide.Game.Controllers
 
             Move();
             if (aiming) Aiming();
+            ShowDialogue();
         }
 
         public void GameLateUpdate()
         {
             CameraRotation();
             CheckInteractable();
+        }
+
+        private void ShowDialogue()
+        {
+            if (Time.time < nextDialogue)
+                return;
+
+            nextDialogue = Time.time + Random.Range(dialogueRange.x, dialogueRange.y);
+            SelfThought.Instance.ShowText(dialogue[Mathf.RoundToInt(Random.Range(0, dialogue.Length))]);
         }
 
 		private void CheckInteractable()
