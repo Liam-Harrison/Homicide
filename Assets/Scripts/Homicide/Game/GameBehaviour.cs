@@ -9,10 +9,10 @@ namespace Homicide.Game
         {
 #if UNITY_EDITOR
             if (GetType().HasMethod("Update"))
-                Debug.LogError("Do not use built-in Update method, use Game interface!");
+                Debug.LogError("Do not use builtin Update method, use Game interface!", gameObject);
             
             if (GetType().HasMethod("LateUpdate"))
-                Debug.LogError("Do not use built-in LateUpdate method, use Game interface!");
+                Debug.LogError("Do not use builtin LateUpdate method, use Game interface!", gameObject);
 #endif
             
             GameManager.Instance.Track(this);

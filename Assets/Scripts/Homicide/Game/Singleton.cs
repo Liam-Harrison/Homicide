@@ -37,7 +37,7 @@ namespace Homicide.Game
 			instance = this as T;
 		}
 
-		protected virtual void OnDestroy()
+		protected void OnDestroy()
 		{
 			if (instance == this)
 				instance = null;

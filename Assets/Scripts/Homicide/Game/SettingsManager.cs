@@ -25,7 +25,7 @@ namespace Homicide.Game
 		protected override void Awake()
 		{
 			base.Awake();
-			InputActions = new InputActions();
+			InputActions = new();
 			FetchStoredSettings();
 		}
 

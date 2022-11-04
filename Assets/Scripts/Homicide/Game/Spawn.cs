@@ -20,7 +20,7 @@ namespace Homicide.Game
             
             Gizmos.color = Color.green;
             Gizmos.matrix = transform.localToWorldMatrix;
-            Gizmos.DrawWireCube(Vector3.up * 0.9f, new Vector3(0.56f, 1.8f, 0.56f));
+            Gizmos.DrawWireCube(Vector3.up * 0.9f, new(0.56f, 1.8f, 0.56f));
         }
     }
 }
